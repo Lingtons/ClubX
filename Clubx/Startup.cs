@@ -1,4 +1,7 @@
 using Clubx.Data;
+using DataAccess.IServices;
+using DataAccess.Models;
+using DataAccess.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -35,6 +38,9 @@ namespace Clubx
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
+
+            services.AddScoped<IService<Places>, PlacesService>();
+
             
         }
 
