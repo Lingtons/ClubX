@@ -40,7 +40,6 @@ namespace DataAccess.Models
                     .AddJsonFile("appsettings.json")
                     .Build();
 
-
                 optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             }
         }
@@ -146,10 +145,6 @@ namespace DataAccess.Models
 
             modelBuilder.Entity<ClubPayments>(entity =>
             {
-                entity.Property(e => e.ClubId)
-                    .IsRequired()
-                    .HasMaxLength(450);
-
                 entity.Property(e => e.Description).HasMaxLength(450);
 
                 entity.Property(e => e.PaymentExpiration).HasColumnType("date");
@@ -173,10 +168,6 @@ namespace DataAccess.Models
 
             modelBuilder.Entity<ClubSchedules>(entity =>
             {
-                entity.Property(e => e.ClubId)
-                    .IsRequired()
-                    .HasMaxLength(450);
-
                 entity.HasOne(d => d.Club)
                     .WithMany(p => p.ClubSchedules)
                     .HasForeignKey(d => d.ClubId)
@@ -192,6 +183,8 @@ namespace DataAccess.Models
 
             modelBuilder.Entity<Clubs>(entity =>
             {
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
                 entity.Property(e => e.Description).HasMaxLength(150);
 
                 entity.Property(e => e.ImageUrl).HasMaxLength(250);
@@ -203,10 +196,6 @@ namespace DataAccess.Models
 
             modelBuilder.Entity<LnkClubUser>(entity =>
             {
-                entity.Property(e => e.ClubId)
-                    .IsRequired()
-                    .HasMaxLength(450);
-
                 entity.Property(e => e.UserId)
                     .IsRequired()
                     .HasMaxLength(450);

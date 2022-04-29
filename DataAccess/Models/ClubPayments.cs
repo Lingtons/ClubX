@@ -8,7 +8,7 @@ namespace DataAccess.Models
     public partial class ClubPayments
     {
         public long Id { get; set; }
-        public string ClubId { get; set; }
+        public Guid ClubId { get; set; }
         public string UserId { get; set; }
         public int? PaymentType { get; set; }
         public double Amount { get; set; }

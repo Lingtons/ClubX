@@ -9,7 +9,7 @@ namespace DataAccess.Models
     {
         public long Id { get; set; }
         public string UserId { get; set; }
-        public string ClubId { get; set; }
+        public Guid ClubId { get; set; }
 
         public virtual Clubs Club { get; set; }
         public virtual AspNetUsers User { get; set; }

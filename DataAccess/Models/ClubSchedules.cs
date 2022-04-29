@@ -9,7 +9,7 @@ namespace DataAccess.Models
     {
         public long Id { get; set; }
         public long PlaceId { get; set; }
-        public string ClubId { get; set; }
+        public Guid ClubId { get; set; }
         public int ClubDay { get; set; }
         public int ClubStartTime { get; set; }
         public int ClubEndTime { get; set; }
