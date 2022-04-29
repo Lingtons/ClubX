@@ -39,9 +39,12 @@ namespace Clubx
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
 
+            services.AddScoped<IService<ClubPayments>, ClubPaymentsService>();
+            services.AddScoped<IService<ClubSchedules>, ClubScheduleService>();
+            services.AddScoped<IService<Clubs>, ClubsService>();
+            services.AddScoped<IService<LnkClubUser>, LnkClubUserService>();
             services.AddScoped<IService<Places>, PlacesService>();
 
-            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

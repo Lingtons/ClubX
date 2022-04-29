@@ -18,6 +18,7 @@ namespace DataAccess.Models
         {
         }
 
+        public virtual DbSet<AppLookups> AppLookups { get; set; }
         public virtual DbSet<AspNetRoleClaims> AspNetRoleClaims { get; set; }
         public virtual DbSet<AspNetRoles> AspNetRoles { get; set; }
         public virtual DbSet<AspNetUserClaims> AspNetUserClaims { get; set; }
@@ -36,9 +37,9 @@ namespace DataAccess.Models
             if (!optionsBuilder.IsConfigured)
             {
                 IConfiguration configuration = new ConfigurationBuilder()
-                    .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                    .AddJsonFile("appsettings.json")
-                    .Build();
+                                  .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+                                  .AddJsonFile("appsettings.json")
+                                  .Build();
 
                 optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             }
@@ -47,6 +48,21 @@ namespace DataAccess.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
+
+            modelBuilder.Entity<AppLookups>(entity =>
+            {
+                entity.Property(e => e.Category)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.Group)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.ValueText)
+                    .IsRequired()
+                    .HasMaxLength(50);
+            });
 
             modelBuilder.Entity<AspNetRoleClaims>(entity =>
             {
