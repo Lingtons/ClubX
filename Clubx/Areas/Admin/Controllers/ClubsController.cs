@@ -33,14 +33,14 @@ namespace Clubx.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var clubs = await _context.Clubs
+            var club = await _context.Clubs
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (clubs == null)
+            if (club == null)
             {
                 return NotFound();
             }
 
-            return View(clubs);
+            return View(club);
         }
 
         // GET: Admin/Clubs/Create
@@ -54,16 +54,16 @@ namespace Clubx.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Description,ImageUrl,HasMembershipFee")] Clubs clubs)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,ImageUrl,HasMembershipFee")] Club club)
         {
             if (ModelState.IsValid)
             {
-                clubs.Id = Guid.NewGuid();
-                _context.Add(clubs);
+                club.Id = Guid.NewGuid();
+                _context.Add(club);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(clubs);
+            return View(club);
         }
 
         // GET: Admin/Clubs/Edit/5
@@ -74,12 +74,12 @@ namespace Clubx.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var clubs = await _context.Clubs.FindAsync(id);
-            if (clubs == null)
+            var club = await _context.Clubs.FindAsync(id);
+            if (club == null)
             {
                 return NotFound();
             }
-            return View(clubs);
+            return View(club);
         }
 
         // POST: Admin/Clubs/Edit/5
@@ -87,9 +87,9 @@ namespace Clubx.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Description,ImageUrl,HasMembershipFee")] Clubs clubs)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Description,ImageUrl,HasMembershipFee")] Club club)
         {
-            if (id != clubs.Id)
+            if (id != club.Id)
             {
                 return NotFound();
             }
@@ -98,12 +98,12 @@ namespace Clubx.Areas.Admin.Controllers
             {
                 try
                 {
-                    _context.Update(clubs);
+                    _context.Update(club);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ClubsExists(clubs.Id))
+                    if (!ClubExists(club.Id))
                     {
                         return NotFound();
                     }
@@ -114,7 +114,7 @@ namespace Clubx.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(clubs);
+            return View(club);
         }
 
         // GET: Admin/Clubs/Delete/5
@@ -125,14 +125,14 @@ namespace Clubx.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var clubs = await _context.Clubs
+            var club = await _context.Clubs
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (clubs == null)
+            if (club == null)
             {
                 return NotFound();
             }
 
-            return View(clubs);
+            return View(club);
         }
 
         // POST: Admin/Clubs/Delete/5
@@ -140,13 +140,13 @@ namespace Clubx.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var clubs = await _context.Clubs.FindAsync(id);
-            _context.Clubs.Remove(clubs);
+            var club = await _context.Clubs.FindAsync(id);
+            _context.Clubs.Remove(club);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ClubsExists(Guid id)
+        private bool ClubExists(Guid id)
         {
             return _context.Clubs.Any(e => e.Id == id);
         }

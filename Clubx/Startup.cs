@@ -42,11 +42,11 @@ namespace Clubx
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
 
-            services.AddScoped<IService<ClubPayments>, ClubPaymentsService>();
-            services.AddScoped<IService<ClubSchedules>, ClubScheduleService>();
-            services.AddScoped<IService<Clubs>, ClubsService>();
+            services.AddScoped<IService<ClubPayment>, ClubPaymentsService>();
+            services.AddScoped<IService<ClubSchedule>, ClubScheduleService>();
+            services.AddScoped<IService<Club>, ClubsService>();
             services.AddScoped<IService<LnkClubUser>, LnkClubUserService>();
-            services.AddScoped<IService<Places>, PlacesService>();
+            services.AddScoped<IService<Place>, PlacesService>();
 
         }
 

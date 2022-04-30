@@ -10,85 +10,86 @@ using DataAccess.Models;
 namespace Clubx.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class LookupsController : Controller
+    public class UsersController : Controller
     {
         private readonly ClubxContext _context;
 
-        public LookupsController(ClubxContext context)
+        public UsersController(ClubxContext context)
         {
             _context = context;
         }
 
-        // GET: Admin/Lookups
+        // GET: Admin/Users
         public async Task<IActionResult> Index()
         {
-            return View(await _context.AppLookups.ToListAsync());
+            return View(await _context.AspNetUsers.ToListAsync());
         }
 
-        // GET: Admin/Lookups/Details/5
-        public async Task<IActionResult> Details(int? id)
+        // GET: Admin/Users/Details/5
+        public async Task<IActionResult> Details(string id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var appLookups = await _context.AppLookups
+            var aspNetUser = await _context.AspNetUsers
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (appLookups == null)
+            if (aspNetUser == null)
             {
                 return NotFound();
             }
 
-            return View(appLookups);
+            return View(aspNetUser);
         }
 
-        // GET: Admin/Lookups/Create
+        // GET: Admin/Users/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Admin/Lookups/Create
+        // POST: Admin/Users/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Category,ValueText,Group")] AppLookups appLookups)
+        public async Task<IActionResult> Create([Bind("UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] AspNetUser aspNetUser)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(appLookups);
+                aspNetUser.Id = Convert.ToString(Guid.NewGuid());
+                _context.Add(aspNetUser);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(appLookups);
+            return View(aspNetUser);
         }
 
-        // GET: Admin/Lookups/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        // GET: Admin/Users/Edit/5
+        public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var appLookups = await _context.AppLookups.FindAsync(id);
-            if (appLookups == null)
+            var aspNetUser = await _context.AspNetUsers.FindAsync(id);
+            if (aspNetUser == null)
             {
                 return NotFound();
             }
-            return View(appLookups);
+            return View(aspNetUser);
         }
 
-        // POST: Admin/Lookups/Edit/5
+        // POST: Admin/Users/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Category,ValueText,Group")] AppLookups appLookups)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] AspNetUser aspNetUser)
         {
-            if (id != appLookups.Id)
+            if (id != aspNetUser.Id)
             {
                 return NotFound();
             }
@@ -97,12 +98,12 @@ namespace Clubx.Areas.Admin.Controllers
             {
                 try
                 {
-                    _context.Update(appLookups);
+                    _context.Update(aspNetUser);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AppLookupsExists(appLookups.Id))
+                    if (!AspNetUserExists(aspNetUser.Id))
                     {
                         return NotFound();
                     }
@@ -113,41 +114,41 @@ namespace Clubx.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(appLookups);
+            return View(aspNetUser);
         }
 
-        // GET: Admin/Lookups/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        // GET: Admin/Users/Delete/5
+        public async Task<IActionResult> Delete(string id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var appLookups = await _context.AppLookups
+            var aspNetUser = await _context.AspNetUsers
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (appLookups == null)
+            if (aspNetUser == null)
             {
                 return NotFound();
             }
 
-            return View(appLookups);
+            return View(aspNetUser);
         }
 
-        // POST: Admin/Lookups/Delete/5
+        // POST: Admin/Users/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var appLookups = await _context.AppLookups.FindAsync(id);
-            _context.AppLookups.Remove(appLookups);
+            var aspNetUser = await _context.AspNetUsers.FindAsync(id);
+            _context.AspNetUsers.Remove(aspNetUser);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool AppLookupsExists(int id)
+        private bool AspNetUserExists(string id)
         {
-            return _context.AppLookups.Any(e => e.Id == id);
+            return _context.AspNetUsers.Any(e => e.Id == id);
         }
     }
 }

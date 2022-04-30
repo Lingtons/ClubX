@@ -15,9 +15,9 @@ namespace Clubx.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IService<Clubs> _clubService;
+        private readonly IService<Club> _clubService;
         private readonly IService<LnkClubUser> _lnkClubUserService;
-        public HomeController(ILogger<HomeController> logger, IService<Clubs> clubService, IService<LnkClubUser> lnkClubUserService)
+        public HomeController(ILogger<HomeController> logger, IService<Club> clubService, IService<LnkClubUser> lnkClubUserService)
         {
             _logger = logger;
             _clubService = clubService;

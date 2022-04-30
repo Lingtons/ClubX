@@ -10,85 +10,86 @@ using DataAccess.Models;
 namespace Clubx.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class PlacesController : Controller
+    public class RolesController : Controller
     {
         private readonly ClubxContext _context;
 
-        public PlacesController(ClubxContext context)
+        public RolesController(ClubxContext context)
         {
             _context = context;
         }
 
-        // GET: Admin/Places
+        // GET: Admin/Roles
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Places.ToListAsync());
+            return View(await _context.AspNetRoles.ToListAsync());
         }
 
-        // GET: Admin/Places/Details/5
-        public async Task<IActionResult> Details(long? id)
+        // GET: Admin/Roles/Details/5
+        public async Task<IActionResult> Details(string id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var place = await _context.Places
+            var aspNetRole = await _context.AspNetRoles
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (place == null)
+            if (aspNetRole == null)
             {
                 return NotFound();
             }
 
-            return View(place);
+            return View(aspNetRole);
         }
 
-        // GET: Admin/Places/Create
+        // GET: Admin/Roles/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Admin/Places/Create
+        // POST: Admin/Roles/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,Address")] Place place)
+        public async Task<IActionResult> Create([Bind("Name,NormalizedName,ConcurrencyStamp")] AspNetRole aspNetRole)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(place);
+                aspNetRole.Id = Convert.ToString(Guid.NewGuid());
+                _context.Add(aspNetRole);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(place);
+            return View(aspNetRole);
         }
 
-        // GET: Admin/Places/Edit/5
-        public async Task<IActionResult> Edit(long? id)
+        // GET: Admin/Roles/Edit/5
+        public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var place = await _context.Places.FindAsync(id);
-            if (place == null)
+            var aspNetRole = await _context.AspNetRoles.FindAsync(id);
+            if (aspNetRole == null)
             {
                 return NotFound();
             }
-            return View(place);
+            return View(aspNetRole);
         }
 
-        // POST: Admin/Places/Edit/5
+        // POST: Admin/Roles/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,Name,Description,Address")] Place place)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,Name,NormalizedName,ConcurrencyStamp")] AspNetRole aspNetRole)
         {
-            if (id != place.Id)
+            if (id != aspNetRole.Id)
             {
                 return NotFound();
             }
@@ -97,12 +98,12 @@ namespace Clubx.Areas.Admin.Controllers
             {
                 try
                 {
-                    _context.Update(place);
+                    _context.Update(aspNetRole);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PlaceExists(place.Id))
+                    if (!AspNetRoleExists(aspNetRole.Id))
                     {
                         return NotFound();
                     }
@@ -113,41 +114,41 @@ namespace Clubx.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(place);
+            return View(aspNetRole);
         }
 
-        // GET: Admin/Places/Delete/5
-        public async Task<IActionResult> Delete(long? id)
+        // GET: Admin/Roles/Delete/5
+        public async Task<IActionResult> Delete(string id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var place = await _context.Places
+            var aspNetRole = await _context.AspNetRoles
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (place == null)
+            if (aspNetRole == null)
             {
                 return NotFound();
             }
 
-            return View(place);
+            return View(aspNetRole);
         }
 
-        // POST: Admin/Places/Delete/5
+        // POST: Admin/Roles/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(long id)
+        public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var place = await _context.Places.FindAsync(id);
-            _context.Places.Remove(place);
+            var aspNetRole = await _context.AspNetRoles.FindAsync(id);
+            _context.AspNetRoles.Remove(aspNetRole);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool PlaceExists(long id)
+        private bool AspNetRoleExists(string id)
         {
-            return _context.Places.Any(e => e.Id == id);
+            return _context.AspNetRoles.Any(e => e.Id == id);
         }
     }
 }

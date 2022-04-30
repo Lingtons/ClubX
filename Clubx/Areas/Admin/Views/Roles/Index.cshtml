@@ -1,4 +1,4 @@
-﻿@model IEnumerable<DataAccess.Models.AppLookups>
+﻿@model IEnumerable<DataAccess.Models.AspNetRole>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,13 +13,13 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Category)
+                @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ValueText)
+                @Html.DisplayNameFor(model => model.NormalizedName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Group)
+                @Html.DisplayNameFor(model => model.ConcurrencyStamp)
             </th>
             <th></th>
         </tr>
@@ -28,13 +28,13 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Category)
+                @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ValueText)
+                @Html.DisplayFor(modelItem => item.NormalizedName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Group)
+                @Html.DisplayFor(modelItem => item.ConcurrencyStamp)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
