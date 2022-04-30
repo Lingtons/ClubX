@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.Extensions.Configuration;
 
 #nullable disable
 
@@ -18,30 +17,26 @@ namespace DataAccess.Models
         {
         }
 
-        public virtual DbSet<AppLookups> AppLookups { get; set; }
-        public virtual DbSet<AspNetRoleClaims> AspNetRoleClaims { get; set; }
-        public virtual DbSet<AspNetRoles> AspNetRoles { get; set; }
-        public virtual DbSet<AspNetUserClaims> AspNetUserClaims { get; set; }
-        public virtual DbSet<AspNetUserLogins> AspNetUserLogins { get; set; }
-        public virtual DbSet<AspNetUserRoles> AspNetUserRoles { get; set; }
-        public virtual DbSet<AspNetUserTokens> AspNetUserTokens { get; set; }
-        public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
-        public virtual DbSet<ClubPayments> ClubPayments { get; set; }
-        public virtual DbSet<ClubSchedules> ClubSchedules { get; set; }
-        public virtual DbSet<Clubs> Clubs { get; set; }
-        public virtual DbSet<LnkClubUser> LnkClubUser { get; set; }
-        public virtual DbSet<Places> Places { get; set; }
+        public virtual DbSet<AppLookup> AppLookups { get; set; }
+        public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
+        public virtual DbSet<AspNetRoleClaim> AspNetRoleClaims { get; set; }
+        public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
+        public virtual DbSet<AspNetUserClaim> AspNetUserClaims { get; set; }
+        public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
+        public virtual DbSet<AspNetUserRole> AspNetUserRoles { get; set; }
+        public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; }
+        public virtual DbSet<Club> Clubs { get; set; }
+        public virtual DbSet<ClubPayment> ClubPayments { get; set; }
+        public virtual DbSet<ClubSchedule> ClubSchedules { get; set; }
+        public virtual DbSet<LnkClubUser> LnkClubUsers { get; set; }
+        public virtual DbSet<Place> Places { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                IConfiguration configuration = new ConfigurationBuilder()
-                                  .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                                  .AddJsonFile("appsettings.json")
-                                  .Build();
-
-                optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("Server=.\\SQLExpress;Database=Clubx; Trusted_Connection=True; User ID=sa; Password=password;");
             }
         }
 
@@ -49,7 +44,7 @@ namespace DataAccess.Models
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
 
-            modelBuilder.Entity<AppLookups>(entity =>
+            modelBuilder.Entity<AppLookup>(entity =>
             {
                 entity.Property(e => e.Category)
                     .IsRequired()
@@ -64,18 +59,7 @@ namespace DataAccess.Models
                     .HasMaxLength(50);
             });
 
-            modelBuilder.Entity<AspNetRoleClaims>(entity =>
-            {
-                entity.HasIndex(e => e.RoleId, "IX_AspNetRoleClaims_RoleId");
-
-                entity.Property(e => e.RoleId).IsRequired();
-
-                entity.HasOne(d => d.Role)
-                    .WithMany(p => p.AspNetRoleClaims)
-                    .HasForeignKey(d => d.RoleId);
-            });
-
-            modelBuilder.Entity<AspNetRoles>(entity =>
+            modelBuilder.Entity<AspNetRole>(entity =>
             {
                 entity.HasIndex(e => e.NormalizedName, "RoleNameIndex")
                     .IsUnique()
@@ -86,63 +70,18 @@ namespace DataAccess.Models
                 entity.Property(e => e.NormalizedName).HasMaxLength(256);
             });
 
-            modelBuilder.Entity<AspNetUserClaims>(entity =>
+            modelBuilder.Entity<AspNetRoleClaim>(entity =>
             {
-                entity.HasIndex(e => e.UserId, "IX_AspNetUserClaims_UserId");
+                entity.HasIndex(e => e.RoleId, "IX_AspNetRoleClaims_RoleId");
 
-                entity.Property(e => e.UserId).IsRequired();
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.AspNetUserClaims)
-                    .HasForeignKey(d => d.UserId);
-            });
-
-            modelBuilder.Entity<AspNetUserLogins>(entity =>
-            {
-                entity.HasKey(e => new { e.LoginProvider, e.ProviderKey });
-
-                entity.HasIndex(e => e.UserId, "IX_AspNetUserLogins_UserId");
-
-                entity.Property(e => e.LoginProvider).HasMaxLength(128);
-
-                entity.Property(e => e.ProviderKey).HasMaxLength(128);
-
-                entity.Property(e => e.UserId).IsRequired();
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.AspNetUserLogins)
-                    .HasForeignKey(d => d.UserId);
-            });
-
-            modelBuilder.Entity<AspNetUserRoles>(entity =>
-            {
-                entity.HasKey(e => new { e.UserId, e.RoleId });
-
-                entity.HasIndex(e => e.RoleId, "IX_AspNetUserRoles_RoleId");
+                entity.Property(e => e.RoleId).IsRequired();
 
                 entity.HasOne(d => d.Role)
-                    .WithMany(p => p.AspNetUserRoles)
+                    .WithMany(p => p.AspNetRoleClaims)
                     .HasForeignKey(d => d.RoleId);
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.AspNetUserRoles)
-                    .HasForeignKey(d => d.UserId);
             });
 
-            modelBuilder.Entity<AspNetUserTokens>(entity =>
-            {
-                entity.HasKey(e => new { e.UserId, e.LoginProvider, e.Name });
-
-                entity.Property(e => e.LoginProvider).HasMaxLength(128);
-
-                entity.Property(e => e.Name).HasMaxLength(128);
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.AspNetUserTokens)
-                    .HasForeignKey(d => d.UserId);
-            });
-
-            modelBuilder.Entity<AspNetUsers>(entity =>
+            modelBuilder.Entity<AspNetUser>(entity =>
             {
                 entity.HasIndex(e => e.NormalizedEmail, "EmailIndex");
 
@@ -159,7 +98,76 @@ namespace DataAccess.Models
                 entity.Property(e => e.UserName).HasMaxLength(256);
             });
 
-            modelBuilder.Entity<ClubPayments>(entity =>
+            modelBuilder.Entity<AspNetUserClaim>(entity =>
+            {
+                entity.HasIndex(e => e.UserId, "IX_AspNetUserClaims_UserId");
+
+                entity.Property(e => e.UserId).IsRequired();
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.AspNetUserClaims)
+                    .HasForeignKey(d => d.UserId);
+            });
+
+            modelBuilder.Entity<AspNetUserLogin>(entity =>
+            {
+                entity.HasKey(e => new { e.LoginProvider, e.ProviderKey });
+
+                entity.HasIndex(e => e.UserId, "IX_AspNetUserLogins_UserId");
+
+                entity.Property(e => e.LoginProvider).HasMaxLength(128);
+
+                entity.Property(e => e.ProviderKey).HasMaxLength(128);
+
+                entity.Property(e => e.UserId).IsRequired();
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.AspNetUserLogins)
+                    .HasForeignKey(d => d.UserId);
+            });
+
+            modelBuilder.Entity<AspNetUserRole>(entity =>
+            {
+                entity.HasKey(e => new { e.UserId, e.RoleId });
+
+                entity.HasIndex(e => e.RoleId, "IX_AspNetUserRoles_RoleId");
+
+                entity.HasOne(d => d.Role)
+                    .WithMany(p => p.AspNetUserRoles)
+                    .HasForeignKey(d => d.RoleId);
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.AspNetUserRoles)
+                    .HasForeignKey(d => d.UserId);
+            });
+
+            modelBuilder.Entity<AspNetUserToken>(entity =>
+            {
+                entity.HasKey(e => new { e.UserId, e.LoginProvider, e.Name });
+
+                entity.Property(e => e.LoginProvider).HasMaxLength(128);
+
+                entity.Property(e => e.Name).HasMaxLength(128);
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.AspNetUserTokens)
+                    .HasForeignKey(d => d.UserId);
+            });
+
+            modelBuilder.Entity<Club>(entity =>
+            {
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.Description).HasMaxLength(150);
+
+                entity.Property(e => e.ImageUrl).HasMaxLength(250);
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(100);
+            });
+
+            modelBuilder.Entity<ClubPayment>(entity =>
             {
                 entity.Property(e => e.Description).HasMaxLength(450);
 
@@ -182,7 +190,7 @@ namespace DataAccess.Models
                     .HasConstraintName("FK_ClubPayments_AspNetUsers");
             });
 
-            modelBuilder.Entity<ClubSchedules>(entity =>
+            modelBuilder.Entity<ClubSchedule>(entity =>
             {
                 entity.HasOne(d => d.Club)
                     .WithMany(p => p.ClubSchedules)
@@ -197,39 +205,28 @@ namespace DataAccess.Models
                     .HasConstraintName("FK_ClubSchedules_ClubSchedules");
             });
 
-            modelBuilder.Entity<Clubs>(entity =>
-            {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
-                entity.Property(e => e.Description).HasMaxLength(150);
-
-                entity.Property(e => e.ImageUrl).HasMaxLength(250);
-
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasMaxLength(100);
-            });
-
             modelBuilder.Entity<LnkClubUser>(entity =>
             {
+                entity.ToTable("LnkClubUser");
+
                 entity.Property(e => e.UserId)
                     .IsRequired()
                     .HasMaxLength(450);
 
                 entity.HasOne(d => d.Club)
-                    .WithMany(p => p.LnkClubUser)
+                    .WithMany(p => p.LnkClubUsers)
                     .HasForeignKey(d => d.ClubId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_LnkClubUser_Clubs");
 
                 entity.HasOne(d => d.User)
-                    .WithMany(p => p.LnkClubUser)
+                    .WithMany(p => p.LnkClubUsers)
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_LnkClubUser_AspNetUsers");
             });
 
-            modelBuilder.Entity<Places>(entity =>
+            modelBuilder.Entity<Place>(entity =>
             {
                 entity.Property(e => e.Address).HasMaxLength(250);
 

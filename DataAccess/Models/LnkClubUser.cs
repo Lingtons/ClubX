@@ -12,7 +12,7 @@ namespace DataAccess.Models
         public Guid ClubId { get; set; }
         public bool HasClubAdminRole { get; set; }
 
-        public virtual Clubs Club { get; set; }
-        public virtual AspNetUsers User { get; set; }
+        public virtual Club Club { get; set; }
+        public virtual AspNetUser User { get; set; }
     }
 }
