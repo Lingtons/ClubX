@@ -7,6 +7,11 @@ namespace DataAccess.Models
 {
     public partial class ClubSchedule
     {
+        public ClubSchedule()
+        {
+            LnkClubScheduleUsers = new HashSet<LnkClubScheduleUser>();
+        }
+
         public long Id { get; set; }
         public long? LocationId { get; set; }
         public Guid ClubId { get; set; }
@@ -22,5 +27,6 @@ namespace DataAccess.Models
 
         public virtual Club Club { get; set; }
         public virtual Location Location { get; set; }
+        public virtual ICollection<LnkClubScheduleUser> LnkClubScheduleUsers { get; set; }
     }
 }

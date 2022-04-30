@@ -48,6 +48,7 @@ namespace Clubx
             services.AddScoped<IService<Club>, ClubsService>();
             services.AddScoped<IService<LnkClubUser>, LnkClubUserService>();
             services.AddScoped<IService<Location>, LocationsService>();
+            services.AddScoped<IService<LnkClubScheduleUser>, LnkClubScheduleUserService>();
 
         }
 

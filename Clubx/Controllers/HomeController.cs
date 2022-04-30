@@ -31,6 +31,7 @@ namespace Clubx.Controllers
         {
             return View(await _clubScheduleService.GetAll()
                 .Include(e => e.Club)
+                .Include(e => e.LnkClubScheduleUsers)
                 .Where(e => e.ExpirationDate.AddDays(1) >= DateTime.Now)
                 .ToListAsync());
         }

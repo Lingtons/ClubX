@@ -52,9 +52,18 @@
                         <div class="col-md-12">
                             <div class="card-footer">
                                 <a asp-controller="Home" asp-action="ViewClub" asp-route-id="@meeting.Club.Id" class="btn btn-sm btn-outline-primary text-dark">View @meeting.Club.Name</a>
-                                <a href="#" data-toggle="modal" data-target="@("#bookSessionModal"+@meeting.Id)" class="btn btn-sm btn-outline-info text-dark">Book this Session</a>
-
-                                <span>@(meeting.Capacity+" slots left")</span>
+                                @{
+                                    int available = meeting.Capacity - meeting.LnkClubScheduleUsers.Count;
+                                    if (available < 1)
+                                    {
+                                        <span>Sold Out</span>
+                                    }
+                                    else
+                                    {
+                                        <a href="#" data-toggle="modal" data-target="@("#bookSessionModal"+@meeting.Id)" class="btn btn-sm btn-outline-info text-dark">Book this Session</a>
+                                        <span>@(available+" slot(s) left")</span>
+                                    }
+                                }
                             </div>
                             <div class="modal fade" id="@("bookSessionModal"+@meeting.Id)" tabindex="-1" role="dialog" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
@@ -96,7 +105,12 @@
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                             @if (User.Identity.IsAuthenticated && Utility.IsMember(meeting.Club.Id, usr.Id))
                                             {
-                                                <button type="button" class="btn btn-primary">Save changes</button>
+                                            <form method="POST" class="enrol" asp-controller="Enrolment" asp-action="Enrol">
+                                                <input type="hidden" name="UserId" value="@usr.Id" />
+                                                <input type="hidden" name="ClubScheduleId" value="@meeting.Id" />
+                                                <button type="submit" class="btn btn-primary">Enrol now</button>
+                                            </form>
+
                                             }
                                         </div>
                                     </div>

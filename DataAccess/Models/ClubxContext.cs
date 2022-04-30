@@ -28,6 +28,7 @@ namespace DataAccess.Models
         public virtual DbSet<Club> Clubs { get; set; }
         public virtual DbSet<ClubPayment> ClubPayments { get; set; }
         public virtual DbSet<ClubSchedule> ClubSchedules { get; set; }
+        public virtual DbSet<LnkClubScheduleUser> LnkClubScheduleUsers { get; set; }
         public virtual DbSet<LnkClubUser> LnkClubUsers { get; set; }
         public virtual DbSet<Location> Locations { get; set; }
 
@@ -212,6 +213,29 @@ namespace DataAccess.Models
                     .WithMany(p => p.ClubSchedules)
                     .HasForeignKey(d => d.LocationId)
                     .HasConstraintName("FK_ClubSchedules_Locations");
+            });
+
+            modelBuilder.Entity<LnkClubScheduleUser>(entity =>
+            {
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.CreatedAt).HasColumnType("date");
+
+                entity.Property(e => e.UserId)
+                    .IsRequired()
+                    .HasMaxLength(450);
+
+                entity.HasOne(d => d.ClubSchedule)
+                    .WithMany(p => p.LnkClubScheduleUsers)
+                    .HasForeignKey(d => d.ClubScheduleId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_LnkClubScheduleUsers_LnkClubScheduleUsers");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.LnkClubScheduleUsers)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_LnkClubScheduleUsers_AspNetUsers");
             });
 
             modelBuilder.Entity<LnkClubUser>(entity =>

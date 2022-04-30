@@ -14,6 +14,7 @@ namespace DataAccess.Models
             AspNetUserRoles = new HashSet<AspNetUserRole>();
             AspNetUserTokens = new HashSet<AspNetUserToken>();
             ClubPayments = new HashSet<ClubPayment>();
+            LnkClubScheduleUsers = new HashSet<LnkClubScheduleUser>();
             LnkClubUsers = new HashSet<LnkClubUser>();
         }
 
@@ -38,6 +39,7 @@ namespace DataAccess.Models
         public virtual ICollection<AspNetUserRole> AspNetUserRoles { get; set; }
         public virtual ICollection<AspNetUserToken> AspNetUserTokens { get; set; }
         public virtual ICollection<ClubPayment> ClubPayments { get; set; }
+        public virtual ICollection<LnkClubScheduleUser> LnkClubScheduleUsers { get; set; }
         public virtual ICollection<LnkClubUser> LnkClubUsers { get; set; }
     }
 }
