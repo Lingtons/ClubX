@@ -29,8 +29,9 @@ namespace Clubx.Controllers
             return View(await _clubService.GetAll().ToListAsync());
         }
 
-        public IActionResult ViewClub(Guid id)
+        public async Task<IActionResult> ViewClub(Guid id)
         {
+            ViewBag.club_members = await _lnkClubUserService.GetAll().Where(d => d.ClubId == id).Include(d => d.User).ToListAsync();
             return View(_clubService.Get(id));
         }
 
@@ -43,6 +44,22 @@ namespace Clubx.Controllers
                 if (!_lnkClubUserService.GetAll().Any(e => e.ClubId == clubUser.ClubId && e.UserId == clubUser.UserId))
                 {
                     _lnkClubUserService.Create(clubUser);
+                }
+            }
+            return Redirect(HttpContext.Request.Headers["Referer"]);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult LinkClubAdmin([Bind("UserId,ClubId")] LnkClubUser clubUser)
+        {
+            if (ModelState.IsValid)
+            {
+                LnkClubUser lnkClubUser = _lnkClubUserService.GetAll().FirstOrDefault(e => e.ClubId == clubUser.ClubId && e.UserId == clubUser.UserId);
+                if (lnkClubUser != null)
+                {
+                    lnkClubUser.HasClubAdminRole = true;
+                    _lnkClubUserService.Update(lnkClubUser);
                 }
             }
             return Redirect(HttpContext.Request.Headers["Referer"]);

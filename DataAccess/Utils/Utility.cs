@@ -15,5 +15,15 @@ namespace DataAccess.Utils
         {
             return _context.LnkClubUsers.Any(e => e.ClubId == clubId && e.UserId == userId);
         }
+
+        public static bool IsClubAdmin(Guid clubId, String userId)
+        {
+            var lnk = _context.LnkClubUsers.FirstOrDefault(e => e.ClubId == clubId && e.UserId == userId);
+            if (lnk != null)
+            {
+                return lnk.HasClubAdminRole;
+            }
+            return false;
+        }
     }
 }
