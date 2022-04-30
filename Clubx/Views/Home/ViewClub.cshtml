@@ -1,0 +1,109 @@
+﻿@model DataAccess.Models.Clubs
+@using Microsoft.AspNetCore.Identity;
+@using DataAccess.Utils;
+@inject UserManager<IdentityUser> _usrManager;
+@{
+    ViewData["Title"] = Model?.Name;
+    IdentityUser usr = null;
+    if (User.Identity.IsAuthenticated)
+    {
+        usr = await _usrManager.FindByNameAsync(User?.Identity?.Name);
+    }
+
+}
+
+<h1>@Model.Name</h1>
+
+<div>
+    <h4>Information</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-6">
+            <img src="@Model.ImageUrl" class="card-img img-fluid" alt="...">
+        </div>
+        <div class="col-md-6">
+            @Model.Description
+            @if (Model.HasMembershipFee)
+            {
+                <p class="text-danger mt-2">Membership is required for this club</p>
+            }
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    @if (!User.Identity.IsAuthenticated)
+                    {
+                        <h6>You need to login to join <span class="text-info">@Model.Name</span> </h6>
+                        <a class="text-dark" asp-area="Identity" asp-page="/Account/Login">Please login here</a>
+                    }
+                    else
+                    {
+                        if (Utility.IsMember(Model.Id, usr.Id))
+                        {
+                            <p>You are a member!</p>
+                        }
+                        else
+                        {
+                            <div class="card">
+
+                                <div class="card-body">
+                                    <form method="POST" asp-controller="Home" asp-action="Enrol">
+                                        <input type="hidden" name="UserId" value="@usr.Id" />
+                                        <input type="hidden" name="ClubId" value="@Model.Id" />
+                                        <input type="hidden" class="HasMembershipFee" name="HasMembershipFee" value="1" />
+                                        @if (Model.HasMembershipFee)
+                                        {
+                                            <div class="row">
+                                                <div class="col-md-6"> <span>Card Payment</span> </div>
+                                                <div class="col-md-6 text-right" style="margin-top: -5px;"> <img src="https://img.icons8.com/color/36/000000/visa.png"> <img src="https://img.icons8.com/color/36/000000/mastercard.png"> <img src="https://img.icons8.com/color/36/000000/amex.png"> </div>
+                                            </div>
+                                            <div class="form-group"> <label for="cc-number" class="control-label">CARD NUMBER</label> <input id="cc-number" type="tel" class="input-lg form-control cc-number" autocomplete="cc-number" placeholder="•••• •••• •••• ••••"> </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group"> <label for="cc-exp" class="control-label">CARD EXPIRY</label> <input id="cc-exp" type="tel" class="input-lg form-control cc-exp" autocomplete="cc-exp" placeholder="•• / ••"> </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group"> <label for="cc-cvc" class="control-label">CARD CVC</label> <input id="cc-cvc" type="tel" class="input-lg form-control cc-cvc" autocomplete="off" placeholder="••••"> </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group"> <label for="numeric" class="control-label">CARD HOLDER NAME</label> <input type="text" class="input-lg form-control"> </div>
+                                        }
+
+                                        <div class="form-group"> <input value="Join @Model.Name" type="submit" class="btn btn-info btn-lg form-control" style="font-size: .8rem;"> </div>
+                                    </form>
+
+                                </div>
+                            </div>
+                        }
+
+                    }
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+@section Scripts{ 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.payment/3.0.0/jquery.payment.min.js"></script>
+    <script>
+        $(function ($) {
+            $('[data-numeric]').payment('restrictNumeric');
+            $('.cc-number').payment('formatCardNumber');
+            $('.cc-exp').payment('formatCardExpiry');
+            $('.cc-cvc').payment('formatCardCVC');
+            $.fn.toggleInputError = function (erred) {
+                this.parent('.form-group').toggleClass('has-error', erred);
+                return this;
+            };
+
+            if ($('.HasMembershipFee').val() == 1) {
+                $('.cc-number').prop("required", true);
+                $('.cc-exp').prop("required", true);
+                $('.cc-cvc').prop("required", true);
+            }
+
+
+        });
+    </script>
+}

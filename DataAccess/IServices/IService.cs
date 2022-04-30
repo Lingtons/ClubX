@@ -11,7 +11,7 @@ namespace DataAccess.IServices
         IQueryable<T> GetAll();
         T Get(Guid guid);
         T Get(int id);
-        void Creat(T obj);
+        void Create(T obj);
         void Update(T obj);
         void Delete(T obj);
     }

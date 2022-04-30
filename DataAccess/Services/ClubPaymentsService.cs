@@ -12,7 +12,7 @@ namespace DataAccess.Services
     {
         readonly ClubxContext _context = new();
 
-        public void Creat(ClubPayments obj)
+        public void Create(ClubPayments obj)
         {
             _context.ClubPayments.Add(obj);
             _context.SaveChanges();

@@ -12,7 +12,7 @@ namespace DataAccess.Services
     {
         readonly ClubxContext _context = new();
 
-        public void Creat(ClubSchedules obj)
+        public void Create(ClubSchedules obj)
         {
             _context.ClubSchedules.Add(obj);
             _context.SaveChanges();
