@@ -192,6 +192,8 @@ namespace DataAccess.Models
 
             modelBuilder.Entity<ClubSchedule>(entity =>
             {
+                entity.Property(e => e.CreatedAt).HasColumnType("date");
+
                 entity.Property(e => e.ExpirationDate).HasColumnType("date");
 
                 entity.Property(e => e.SessionTitle)
@@ -209,7 +211,6 @@ namespace DataAccess.Models
                 entity.HasOne(d => d.Location)
                     .WithMany(p => p.ClubSchedules)
                     .HasForeignKey(d => d.LocationId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ClubSchedules_Locations");
             });
 

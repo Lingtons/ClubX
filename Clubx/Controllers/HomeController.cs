@@ -29,7 +29,10 @@ namespace Clubx.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View(await _clubService.GetAll().ToListAsync());
+            return View(await _clubScheduleService.GetAll()
+                .Include(e => e.Club)
+                .Where(e => e.ExpirationDate.AddDays(1) >= DateTime.Now)
+                .ToListAsync());
         }
 
         public async Task<IActionResult> ViewClub(Guid id)

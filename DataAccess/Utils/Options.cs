@@ -16,5 +16,10 @@ namespace DataAccess.Utils
             return _context.AppLookups.Where(e => e.Category == category).AsEnumerable();
         }
 
+        public static string GetLookupName(int id)
+        {
+            return _context.AppLookups.FirstOrDefault(e => e.Id == id).ValueText;
+        }
+
     }
 }

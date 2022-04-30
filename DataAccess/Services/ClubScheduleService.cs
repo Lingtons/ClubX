@@ -14,6 +14,7 @@ namespace DataAccess.Services
 
         public void Create(ClubSchedule obj)
         {
+            obj.CreatedAt = DateTime.Now;
             _context.ClubSchedules.Add(obj);
             _context.SaveChanges();
         }
