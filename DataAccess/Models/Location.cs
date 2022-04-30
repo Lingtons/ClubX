@@ -5,9 +5,9 @@ using System.Collections.Generic;
 
 namespace DataAccess.Models
 {
-    public partial class Place
+    public partial class Location
     {
-        public Place()
+        public Location()
         {
             ClubSchedules = new HashSet<ClubSchedule>();
         }

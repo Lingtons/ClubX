@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.Extensions.Configuration;
 
 #nullable disable
 
@@ -30,18 +29,14 @@ namespace DataAccess.Models
         public virtual DbSet<ClubPayment> ClubPayments { get; set; }
         public virtual DbSet<ClubSchedule> ClubSchedules { get; set; }
         public virtual DbSet<LnkClubUser> LnkClubUsers { get; set; }
-        public virtual DbSet<Place> Places { get; set; }
+        public virtual DbSet<Location> Locations { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                IConfigurationRoot configuration = new ConfigurationBuilder()
-                             .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                             .AddJsonFile("appsettings.json")
-                             .Build();
-
-                optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("Server=.\\SQLExpress;Database=Clubx; Trusted_Connection=True; User ID=sa; Password=password;");
             }
         }
 
@@ -197,17 +192,25 @@ namespace DataAccess.Models
 
             modelBuilder.Entity<ClubSchedule>(entity =>
             {
+                entity.Property(e => e.ExpirationDate).HasColumnType("date");
+
+                entity.Property(e => e.SessionTitle)
+                    .IsRequired()
+                    .HasMaxLength(150);
+
+                entity.Property(e => e.VirtualLink).HasMaxLength(450);
+
                 entity.HasOne(d => d.Club)
                     .WithMany(p => p.ClubSchedules)
                     .HasForeignKey(d => d.ClubId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ClubSchedules_Clubs");
 
-                entity.HasOne(d => d.Place)
+                entity.HasOne(d => d.Location)
                     .WithMany(p => p.ClubSchedules)
-                    .HasForeignKey(d => d.PlaceId)
+                    .HasForeignKey(d => d.LocationId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ClubSchedules_ClubSchedules");
+                    .HasConstraintName("FK_ClubSchedules_Locations");
             });
 
             modelBuilder.Entity<LnkClubUser>(entity =>
@@ -231,7 +234,7 @@ namespace DataAccess.Models
                     .HasConstraintName("FK_LnkClubUser_AspNetUsers");
             });
 
-            modelBuilder.Entity<Place>(entity =>
+            modelBuilder.Entity<Location>(entity =>
             {
                 entity.Property(e => e.Address).HasMaxLength(250);
 
