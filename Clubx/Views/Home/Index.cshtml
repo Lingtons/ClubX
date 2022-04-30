@@ -1,7 +1,17 @@
 ﻿@model IEnumerable<DataAccess.Models.ClubSchedule>
+@using Microsoft.AspNetCore.Identity;
 @using DataAccess.Utils;
+@inject UserManager<IdentityUser> _usrManager;
 @{
     ViewData["Title"] = "Home Page";
+
+    IdentityUser usr = null;
+    bool isAdmin = false;
+    if (User.Identity.IsAuthenticated)
+    {
+        usr = await _usrManager.FindByNameAsync(User?.Identity?.Name);
+        isAdmin = User.IsInRole("admin");
+    }
 }
 
 <div class="">
@@ -42,14 +52,60 @@
                         <div class="col-md-12">
                             <div class="card-footer">
                                 <a asp-controller="Home" asp-action="ViewClub" asp-route-id="@meeting.Club.Id" class="btn btn-sm btn-outline-primary text-dark">View @meeting.Club.Name</a>
-                                <a asp-controller="Home" asp-action="ViewClub" asp-route-id="@meeting.Club.Id" class="btn btn-sm btn-outline-info text-dark">Book this Session</a>
-                                
+                                <a href="#" data-toggle="modal" data-target="@("#bookSessionModal"+@meeting.Id)" class="btn btn-sm btn-outline-info text-dark">Book this Session</a>
+
                                 <span>@(meeting.Capacity+" slots left")</span>
+                            </div>
+                            <div class="modal fade" id="@("bookSessionModal"+@meeting.Id)" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">@meeting.SessionTitle</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <img src="@meeting.Club.ImageUrl" class="img-fluid" alt="...">
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">@meeting.SessionTitle</h5>
+                                                        <p class="card-text">@meeting.Club.Description</p>
+                                                        <p class="card-text">
+                                                            @(Options.GetLookupName(meeting.ClubDay)+" From "+ Options.GetLookupName(meeting.ClubStartTime)+" To "+ Options.GetLookupName(meeting.ClubEndTime))
+
+                                                            @if (!meeting.Virtual)
+                                                            {
+                                                                <span class=" badge badge-pill badge-secondary">Physical</span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span class=" badge badge-pill badge-info">Virtual</span>
+                                                            }
+                                                        </p>
+                                                        <p class="text-danger"><small>You must be a club member and logged in to book this session</small></p>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            @if (User.Identity.IsAuthenticated && Utility.IsMember(meeting.Club.Id, usr.Id))
+                                            {
+                                                <button type="button" class="btn btn-primary">Save changes</button>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-        </div>
+            </div>
         }
     </div>
 }
