@@ -2,7 +2,10 @@
 @using Microsoft.AspNetCore.Identity;
 @using DataAccess.Models; 
 @using DataAccess.Utils;
+@using DataAccess.IServices; 
+@using DataAccess.Utils;
 @inject UserManager<IdentityUser> _usrManager;
+@inject IService<Location> _locationService;
 @{
     ViewData["Title"] = Model?.Name;
     IdentityUser usr = null;
@@ -147,7 +150,65 @@
 
 
         </div>
-        <div class="tab-pane fade" id="meeting" role="tabpanel" aria-labelledby="meeting-tab">...</div>
+        <div class="tab-pane fade mt-4" id="meeting" role="tabpanel" aria-labelledby="meeting-tab">
+            <h4>Manage Meetings</h4>
+            <hr />
+            <div class="row">
+                <div class="col-4">
+                    <form method="post"  asp-controller="Home" asp-action="CreateMeeting">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" name="ClubId" value="@Model.Id" />
+                        <div class="form-group">
+                            <label class="control-label">Title</label>
+                            <input type="text" name="SessionTitle" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Location</label>
+                            @Html.DropDownList("LocationId", new SelectList(_locationService.GetAll(), "Id", "Name"), "Select Location", new { @class = "form-control" })
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Capacity</label>
+                            <input type="number" name="Capacity" class="form-control" />
+                        </div>
+                        <div class="form-group form-check">
+                            <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" name="Virtual" /> Virtual
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Meeting Link</label>
+                            <input type="text" name="VirtualLink" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Meeting Day</label>
+                            @Html.DropDownList("ClubDay", new SelectList(Options.GetLookups("days"), "Id", "ValueText"), "Select Day", new { @class = "form-control" })
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Start Time</label>
+                            @Html.DropDownList("ClubStartTime", new SelectList(Options.GetLookups("times"), "Id", "ValueText"), "Select Start Time", new { @class = "form-control" })
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">End Time</label>
+                            @Html.DropDownList("ClubEndTime", new SelectList(Options.GetLookups("times"), "Id", "ValueText"), "Select End Time", new { @class = "form-control" })
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Expires</label>
+                            <input type="date" name="ExpirationDate" class="form-control" />
+                        </div>
+
+                        <div class="form-group">
+                            <input type="submit" value="Create" class="btn btn-primary" />
+                        </div>
+                    </form>
+                </div>
+                <div class="col-8">
+
+
+                </div>
+
+            </div>
+
+        </div>
     </div>
 </div>
 }

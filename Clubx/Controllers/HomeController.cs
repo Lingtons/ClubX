@@ -17,11 +17,14 @@ namespace Clubx.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IService<Club> _clubService;
         private readonly IService<LnkClubUser> _lnkClubUserService;
-        public HomeController(ILogger<HomeController> logger, IService<Club> clubService, IService<LnkClubUser> lnkClubUserService)
+        private readonly IService<ClubSchedule> _clubScheduleService;
+
+        public HomeController(ILogger<HomeController> logger, IService<Club> clubService, IService<LnkClubUser> lnkClubUserService, IService<ClubSchedule> clubScheduleService)
         {
             _logger = logger;
             _clubService = clubService;
             _lnkClubUserService = lnkClubUserService;
+            _clubScheduleService = clubScheduleService;
         }
 
         public async Task<IActionResult> Index()
@@ -64,6 +67,26 @@ namespace Clubx.Controllers
             }
             return Redirect(HttpContext.Request.Headers["Referer"]);
         }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CreateMeeting(ClubSchedule meeting)
+        {
+            try
+            {
+                _clubScheduleService.Create(meeting);
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogInformation(ex.Message);
+            }
+
+            return Redirect(HttpContext.Request.Headers["Referer"]);
+        }
+
+
 
         public IActionResult Privacy()
         {
