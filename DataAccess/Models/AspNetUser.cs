@@ -16,6 +16,7 @@ namespace DataAccess.Models
             ClubPayments = new HashSet<ClubPayment>();
             LnkClubScheduleUsers = new HashSet<LnkClubScheduleUser>();
             LnkClubUsers = new HashSet<LnkClubUser>();
+            Messages = new HashSet<Message>();
         }
 
         public string Id { get; set; }
@@ -43,5 +44,6 @@ namespace DataAccess.Models
         public virtual ICollection<ClubPayment> ClubPayments { get; set; }
         public virtual ICollection<LnkClubScheduleUser> LnkClubScheduleUsers { get; set; }
         public virtual ICollection<LnkClubUser> LnkClubUsers { get; set; }
+        public virtual ICollection<Message> Messages { get; set; }
     }
 }

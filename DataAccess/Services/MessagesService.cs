@@ -14,6 +14,7 @@ namespace DataAccess.Services
 
         public void Create(Message obj)
         {
+            obj.CreatedAt = DateTime.Now;
             _context.Messages.Add(obj);
             _context.SaveChanges();
         }

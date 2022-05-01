@@ -271,11 +271,9 @@ namespace DataAccess.Models
 
             modelBuilder.Entity<Message>(entity =>
             {
-                entity.Property(e => e.CreatedAt).HasColumnType("date");
+                entity.Property(e => e.CreatedAt).HasColumnType("datetime");
 
-                entity.Property(e => e.Message1)
-                    .IsRequired()
-                    .HasColumnName("Message");
+                entity.Property(e => e.MessageBody).IsRequired();
 
                 entity.Property(e => e.RecipientId)
                     .IsRequired()
@@ -284,6 +282,12 @@ namespace DataAccess.Models
                 entity.Property(e => e.SenderId)
                     .IsRequired()
                     .HasMaxLength(450);
+
+                entity.HasOne(d => d.Recipient)
+                    .WithMany(p => p.Messages)
+                    .HasForeignKey(d => d.RecipientId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Messages_AspNetUsers");
             });
 
             OnModelCreatingPartial(modelBuilder);

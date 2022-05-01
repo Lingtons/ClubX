@@ -25,5 +25,16 @@ namespace DataAccess.Utils
             }
             return false;
         }
+
+        public static string GetUserNames(string id)
+        {
+            var user = _context.AspNetUsers.FirstOrDefault(e => e.Id == id);
+            if (user != null)
+            {
+                return String.Format(user?.FirstName+" "+user?.LastName);
+            }
+
+            return "";
+        } 
     }
 }
