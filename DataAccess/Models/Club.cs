@@ -19,6 +19,7 @@ namespace DataAccess.Models
         public string Description { get; set; }
         public string ImageUrl { get; set; }
         public bool HasMembershipFee { get; set; }
+        public double? Amount { get; set; }
 
         public virtual ICollection<ClubPayment> ClubPayments { get; set; }
         public virtual ICollection<ClubSchedule> ClubSchedules { get; set; }
