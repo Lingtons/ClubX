@@ -1,5 +1,6 @@
 ﻿using DataAccess.IServices;
 using DataAccess.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -20,6 +21,16 @@ namespace Clubx.Controllers
         }
 
         public async Task<IActionResult> Index()
+        {
+            return View(await _clubScheduleService.GetAll()
+                .Include(e => e.Club)
+                .Include(e => e.LnkClubScheduleUsers)
+                .Where(e => e.ExpirationDate.AddDays(1) >= DateTime.Now)
+                .ToListAsync());
+        }
+
+        [Authorize()]
+        public async Task<IActionResult> MySessions()
         {
             return View(await _clubScheduleService.GetAll()
                 .Include(e => e.Club)

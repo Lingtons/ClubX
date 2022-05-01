@@ -11,6 +11,7 @@
     ApplicationUser usr = null;
     bool isAdmin = false;
     IEnumerable<LnkClubUser> club_members = (IEnumerable<LnkClubUser>)ViewBag.club_members;
+    IEnumerable<ClubSchedule> club_sessions = (IEnumerable<ClubSchedule>)ViewBag.club_sessions;
     if (User.Identity.IsAuthenticated)
     {
         usr = await _usrManager.FindByNameAsync(User?.Identity?.Name);
@@ -118,16 +119,13 @@
 
 </div>
 
-@if (isAdmin)
+@if (isAdmin || Utility.IsClubAdmin(Model.Id, usr.Id))
 {
 <div class="mt-5">
 
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
             <a class="nav-link active" id="setting-tab" data-toggle="tab" href="#setting" role="tab" aria-controls="setting" aria-selected="true">Club Settings</a>
-        </li>
-        <li class="nav-item" role="presentation">
-            <a class="nav-link" id="schedule-tab" data-toggle="tab" href="#schedule" role="tab" aria-controls="schedule" aria-selected="false">Club Schedule</a>
         </li>
         <li class="nav-item" role="presentation">
             <a class="nav-link" id="meeting-tab" data-toggle="tab" href="#meeting" role="tab" aria-controls="contact" aria-selected="false">Club Meetings</a>
@@ -142,7 +140,7 @@
                     <form method="POST" asp-controller="Home" asp-action="LinkClubAdmin">
                         <div class="form-group">
                             <input type="hidden" name="ClubId" value="@Model.Id" />
-                            <label>Select club member</label>
+                            <label>Set club administrator </label>
                             <select class="form-control" name="UserId" required>
                                 <option value="">Select a club member</option>
                                 @foreach (var member in club_members)
@@ -173,10 +171,6 @@
                     </table>
                 </div>
             </div>
-        </div>
-        <div class="tab-pane fade" id="schedule" role="tabpanel" aria-labelledby="schedule-tab">
-
-
         </div>
         <div class="tab-pane fade mt-4" id="meeting" role="tabpanel" aria-labelledby="meeting-tab">
             <h4>Manage Meetings</h4>
@@ -230,12 +224,36 @@
                     </form>
                 </div>
                 <div class="col-8">
+                    <h6 class="font-weight-light">Club Sessions</h6>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Day</th>
+                                <th>Start</th>
+                                <th>End</th>
+                                <th>Capacity</th>
+                                <th>Expires</th>
 
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var session in club_sessions)
+                            {
+                            <tr>
+                                <td>@session.SessionTitle</td>
+                                <td>@Options.GetLookupName(session.ClubDay)</td>
+                                <td>@Options.GetLookupName(session.ClubStartTime)</td>
+                                <td>@Options.GetLookupName(session.ClubEndTime)</td>
+                                <td>@session.Capacity</td>
+                                <td>@session.ExpirationDate</td>
+                            </tr>
 
+                            }
+                        </tbody>
+                    </table>
                 </div>
-
             </div>
-
         </div>
     </div>
 </div>

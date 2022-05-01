@@ -47,6 +47,10 @@ namespace Clubx.Controllers
             ViewBag.club_members = await _lnkClubUserService.GetAll()
                 .Include(d => d.User)
                 .Where(d => d.ClubId == id).ToListAsync();
+
+            ViewBag.club_sessions = await _clubScheduleService.GetAll()
+                .Where(e => e.ClubId == id).ToListAsync();
+
             return View(_clubService.Get(id));
         }
 
