@@ -38,7 +38,9 @@ namespace Clubx.Controllers
 
         public async Task<IActionResult> ViewClub(Guid id)
         {
-            ViewBag.club_members = await _lnkClubUserService.GetAll().Where(d => d.ClubId == id).Include(d => d.User).ToListAsync();
+            ViewBag.club_members = await _lnkClubUserService.GetAll()
+                .Include(d => d.User)
+                .Where(d => d.ClubId == id).ToListAsync();
             return View(_clubService.Get(id));
         }
 

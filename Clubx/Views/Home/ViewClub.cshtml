@@ -90,6 +90,34 @@
     </div>   
 </div>
 
+<div class="mt-5">
+    <h4>Club Members</h4>
+    <h6 class="font-weight-normal">Chat with fellow group members</h6>
+    <hr />
+    @if (User.Identity.IsAuthenticated && Utility.IsMember(Model.Id, usr.Id))
+    {
+        <ul class="list-group">
+            @foreach (var member in club_members.Where(e => e.UserId != usr.Id))
+            {
+                <li class="list-group-item">
+
+                    @member.User.UserName
+                    <form class="float-right" asp-controller="Message" asp-action="Index" method="post">
+                        <input type="hidden" name="SenderId" value="@usr.Id" />
+                        <input type="hidden" name="RecipientId" value="@member.User.Id" />
+                        <button class="btn btn-block btn-primary" type="submit">
+                            Chat <i class="fa fa-envelope"></i>
+                        </button>
+                    </form>
+
+                </li>
+            }
+
+        </ul>
+    }
+
+</div>
+
 @if (isAdmin)
 {
 <div class="mt-5">

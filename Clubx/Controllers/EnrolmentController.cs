@@ -36,9 +36,8 @@ namespace Clubx.Controllers
                     
                         return RedirectToAction(nameof(EnrolSuccess));
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-
                         return RedirectToAction(nameof(EnrolFail));
                     }
 
