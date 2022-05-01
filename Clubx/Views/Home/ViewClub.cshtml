@@ -4,11 +4,11 @@
 @using DataAccess.Utils;
 @using DataAccess.IServices; 
 @using DataAccess.Utils;
-@inject UserManager<IdentityUser> _usrManager;
+@inject UserManager<ApplicationUser> _usrManager;
 @inject IService<Location> _locationService;
 @{
     ViewData["Title"] = Model?.Name;
-    IdentityUser usr = null;
+    ApplicationUser usr = null;
     bool isAdmin = false;
     IEnumerable<LnkClubUser> club_members = (IEnumerable<LnkClubUser>)ViewBag.club_members;
     if (User.Identity.IsAuthenticated)

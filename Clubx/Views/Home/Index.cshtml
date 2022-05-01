@@ -1,11 +1,11 @@
 ﻿@model IEnumerable<DataAccess.Models.ClubSchedule>
 @using Microsoft.AspNetCore.Identity;
 @using DataAccess.Utils;
-@inject UserManager<IdentityUser> _usrManager;
+@inject UserManager<ApplicationUser> _usrManager;
 @{
     ViewData["Title"] = "Home Page";
 
-    IdentityUser usr = null;
+    ApplicationUser usr = null;
     bool isAdmin = false;
     if (User.Identity.IsAuthenticated)
     {

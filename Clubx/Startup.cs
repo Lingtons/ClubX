@@ -1,4 +1,5 @@
 using Clubx.Data;
+using Clubx.Models;
 using DataAccess.IServices;
 using DataAccess.Models;
 using DataAccess.Services;
@@ -38,7 +39,7 @@ namespace Clubx
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDatabaseDeveloperPageExceptionFilter();
 
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
