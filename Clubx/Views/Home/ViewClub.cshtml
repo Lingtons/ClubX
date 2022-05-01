@@ -101,7 +101,7 @@
             {
                 <li class="list-group-item">
 
-                    @member.User.UserName
+                    @(member.User.FirstName+" "+member.User.LastName) 
                     <form class="float-right" asp-controller="Message" asp-action="Index" method="post">
                         <input type="hidden" name="SenderId" value="@usr.Id" />
                         <input type="hidden" name="RecipientId" value="@member.User.Id" />
