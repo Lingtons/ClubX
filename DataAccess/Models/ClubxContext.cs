@@ -31,6 +31,7 @@ namespace DataAccess.Models
         public virtual DbSet<LnkClubScheduleUser> LnkClubScheduleUsers { get; set; }
         public virtual DbSet<LnkClubUser> LnkClubUsers { get; set; }
         public virtual DbSet<Location> Locations { get; set; }
+        public virtual DbSet<Message> Messages { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -217,8 +218,6 @@ namespace DataAccess.Models
 
             modelBuilder.Entity<LnkClubScheduleUser>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.CreatedAt).HasColumnType("date");
 
                 entity.Property(e => e.UserId)
@@ -268,6 +267,23 @@ namespace DataAccess.Models
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(100);
+            });
+
+            modelBuilder.Entity<Message>(entity =>
+            {
+                entity.Property(e => e.CreatedAt).HasColumnType("date");
+
+                entity.Property(e => e.Message1)
+                    .IsRequired()
+                    .HasColumnName("Message");
+
+                entity.Property(e => e.RecipientId)
+                    .IsRequired()
+                    .HasMaxLength(450);
+
+                entity.Property(e => e.SenderId)
+                    .IsRequired()
+                    .HasMaxLength(450);
             });
 
             OnModelCreatingPartial(modelBuilder);
