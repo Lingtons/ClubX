@@ -18,13 +18,19 @@ namespace Clubx.Controllers
         private readonly IService<Club> _clubService;
         private readonly IService<LnkClubUser> _lnkClubUserService;
         private readonly IService<ClubSchedule> _clubScheduleService;
+        private readonly IService<ClubPayment> _clubPaymentService;
 
-        public HomeController(ILogger<HomeController> logger, IService<Club> clubService, IService<LnkClubUser> lnkClubUserService, IService<ClubSchedule> clubScheduleService)
+        public HomeController(ILogger<HomeController> logger, 
+            IService<Club> clubService, 
+            IService<LnkClubUser> lnkClubUserService, 
+            IService<ClubSchedule> clubScheduleService,
+            IService<ClubPayment> clubPaymentService)
         {
             _logger = logger;
             _clubService = clubService;
             _lnkClubUserService = lnkClubUserService;
             _clubScheduleService = clubScheduleService;
+            _clubPaymentService = clubPaymentService;
         }
 
         public async Task<IActionResult> Index()
@@ -46,13 +52,24 @@ namespace Clubx.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Enrol([Bind("UserId,ClubId")] LnkClubUser clubUser)
+        public IActionResult Enrol([Bind("UserId,ClubId,HasMembershipFee")] Guid clubId, string userId, int HasMembershipFee)
         {
             if (ModelState.IsValid)
             {
-                if (!_lnkClubUserService.GetAll().Any(e => e.ClubId == clubUser.ClubId && e.UserId == clubUser.UserId))
+                if (!_lnkClubUserService.GetAll().Any(e => e.ClubId == clubId && e.UserId == userId))
                 {
-                    _lnkClubUserService.Create(clubUser);
+                    if (HasMembershipFee == 1)
+                    {
+                        //record payment
+                        Club club = _clubService.Get(clubId);
+                        if (club != null)
+                        {
+                            ClubPayment payment = new ClubPayment {ClubId = clubId, Amount = club.Amount.Value, Description = "Membership Payment", PaymentExpiration = DateTime.Now.AddYears(1), PaymentMethod = 1, PaymentType = 1, UserId = userId  };
+                            _clubPaymentService.Create(payment);                            
+                        }
+                    }
+                    LnkClubUser lnk = new LnkClubUser { ClubId = clubId, UserId = userId};
+                    _lnkClubUserService.Create(lnk);
                 }
             }
             return Redirect(HttpContext.Request.Headers["Referer"]);

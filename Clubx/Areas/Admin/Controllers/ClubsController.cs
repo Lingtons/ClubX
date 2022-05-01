@@ -56,7 +56,7 @@ namespace Clubx.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,ImageUrl,HasMembershipFee")] Club club)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,ImageUrl,HasMembershipFee,Amount")] Club club)
         {
             if (ModelState.IsValid)
             {
@@ -89,7 +89,7 @@ namespace Clubx.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Description,ImageUrl,HasMembershipFee")] Club club)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Description,ImageUrl,HasMembershipFee,Amount")] Club club)
         {
             if (id != club.Id)
             {

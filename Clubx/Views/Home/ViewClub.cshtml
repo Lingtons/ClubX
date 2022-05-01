@@ -32,7 +32,7 @@
             @Model.Description
             @if (Model.HasMembershipFee)
             {
-                <p class="text-danger mt-2">Membership is required for this club</p>
+                <p class="text-danger mt-2">Membership fee of <span class="text-black-50 fa fa-pound-sign">@Model.Amount</span> is required for this club</p>
             }
 
             <div class="row">
@@ -56,7 +56,7 @@
                                     <form method="POST" class="enrol-form" asp-controller="Home" asp-action="Enrol">
                                         <input type="hidden" name="UserId" value="@usr.Id" />
                                         <input type="hidden" name="ClubId" value="@Model.Id" />
-                                        <input type="hidden" class="HasMembershipFee" name="HasMembershipFee" value="1" />
+                                        <input type="hidden" class="HasMembershipFee" name="HasMembershipFee" value="@Convert.ToInt32(Model.HasMembershipFee)" />
                                         @if (Model.HasMembershipFee)
                                         {
                                             <div class="row">
