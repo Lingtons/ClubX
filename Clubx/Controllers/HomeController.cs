@@ -64,7 +64,7 @@ namespace Clubx.Controllers
                         Club club = _clubService.Get(clubId);
                         if (club != null)
                         {
-                            ClubPayment payment = new ClubPayment {ClubId = clubId, Amount = club.Amount.Value, Description = "Membership Payment", PaymentExpiration = DateTime.Now.AddYears(1), PaymentMethod = 1, PaymentType = 1, UserId = userId  };
+                            ClubPayment payment = new ClubPayment {ClubId = clubId, Amount = club.Amount.Value, Description = "Membership Payment", PaymentExpiration = DateTime.Now.AddYears(1), PaymentMethod = 57, PaymentType = 58, UserId = userId  };
                             _clubPaymentService.Create(payment);                            
                         }
                     }

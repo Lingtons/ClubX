@@ -1,0 +1,40 @@
+﻿@model IEnumerable<DataAccess.Models.Club>
+@{ 
+    ViewData["Title"] = "Clubs";
+}
+
+<div class="">
+    <h1 class="display-4">Clubs</h1>
+</div>
+
+@if (Model.Any())
+{
+    <div class="row mt-4">
+        @foreach (var club in Model)
+        {
+            <div class="col-md-6">
+                <div class="card mb-3" style="max-width: 540px;">
+                    <div class="row no-gutters">
+                        <div class="col-md-4">
+                            <img src="@club.ImageUrl" class="card-img img-fluid" alt="...">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title">@club.Name</h5>
+                                <p class="card-text">@club.Description</p>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="card-footer">
+                                <a asp-controller="Home" asp-action="ViewClub" asp-route-id="@club.Id" class="btn btn-sm btn-outline-primary text-dark">View or Enrol to @club.Name</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+
+
