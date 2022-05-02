@@ -20,6 +20,7 @@ namespace DataAccess.Models
         public int ClubEndTime { get; set; }
         public string SessionTitle { get; set; }
         public DateTime ExpirationDate { get; set; }
+        public DateTime? StartDate { get; set; }
         public int Capacity { get; set; }
         public bool Virtual { get; set; }
         public string VirtualLink { get; set; }

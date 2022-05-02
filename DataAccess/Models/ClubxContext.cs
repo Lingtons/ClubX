@@ -203,6 +203,7 @@ namespace DataAccess.Models
                 entity.Property(e => e.CreatedAt).HasColumnType("date");
 
                 entity.Property(e => e.ExpirationDate).HasColumnType("date");
+                entity.Property(e => e.StartDate).HasColumnType("date");
 
                 entity.Property(e => e.SessionTitle)
                     .IsRequired()
