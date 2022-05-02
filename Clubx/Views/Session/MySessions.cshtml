@@ -1,0 +1,117 @@
+﻿@model IEnumerable<DataAccess.Models.LnkClubScheduleUser>
+@using Microsoft.AspNetCore.Identity;
+@using DataAccess.Utils;
+@inject UserManager<ApplicationUser> _usrManager;
+@{
+    ViewData["Title"] = "Sessions";
+
+    ApplicationUser usr = null;
+    bool isAdmin = false;
+    if (User.Identity.IsAuthenticated)
+    {
+        usr = await _usrManager.FindByNameAsync(User?.Identity?.Name);
+        isAdmin = User.IsInRole("admin");
+    }
+}
+
+<div class="">
+    <h1 class="display-4">My Sessions</h1>
+</div>
+
+@if (Model.Any())
+{
+    <div class="row mt-4">
+        @foreach (var lnk in Model)
+        {
+            <div class="col-md-6">
+                <div class="card mb-3" style="max-width: 540px;">
+                    <div class="row no-gutters">
+                        <div class="col-md-4">
+                            <img src="@lnk.ClubSchedule.Club.ImageUrl" class="card-img img-fluid" alt="...">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title">@lnk.ClubSchedule.SessionTitle</h5>
+                                <p class="card-text">@lnk.ClubSchedule.Club.Description</p>
+                                <p class="card-text">
+                                    @(Options.GetLookupName(lnk.ClubSchedule.ClubDay)+" From "+ Options.GetLookupName(lnk.ClubSchedule.ClubStartTime)+" To "+ Options.GetLookupName(lnk.ClubSchedule.ClubEndTime))
+
+                                    @if (!lnk.ClubSchedule.Virtual)
+                                    {
+                                        <span class=" badge badge-pill badge-secondary">Physical</span>
+                                    }
+                                    else
+                                    {
+                                        <span class=" badge badge-pill badge-info">Virtual</span>
+                                    }
+
+                                </p>
+                                @*<p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>*@
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="card-footer">
+                                <a href="#" data-toggle="modal" data-target="@("#viewSessionModal"+@lnk.Id)" class="btn btn-sm btn-outline-secondary text-dark">View Session Information</a>
+                                <a asp-controller="Home" asp-action="ViewClub" asp-route-id="@lnk.ClubSchedule.Club.Id" class="btn btn-sm btn-outline-primary text-dark">View @lnk.ClubSchedule.Club.Name</a>
+
+                            </div>
+                            <div class="modal fade" id="@("viewSessionModal"+@lnk.Id)" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">@lnk.ClubSchedule.SessionTitle</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <img src="@lnk.ClubSchedule.Club.ImageUrl" class="img-fluid" alt="...">
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">@lnk.ClubSchedule.SessionTitle</h5>
+                                                        <p class="card-text">@lnk.ClubSchedule.Club.Description</p>
+                                                        <p class="card-text">
+                                                            @(Options.GetLookupName(lnk.ClubSchedule.ClubDay)+" From "+ Options.GetLookupName(lnk.ClubSchedule.ClubStartTime)+" To "+ Options.GetLookupName(lnk.ClubSchedule.ClubEndTime))
+
+                                                            @if (!lnk.ClubSchedule.Virtual)
+                                                            {
+                                                                <span class=" badge badge-pill badge-secondary">Physical</span>
+                                                                
+                                                            }
+                                                            else
+                                                            {
+                                                                <span class=" badge badge-pill badge-info">Virtual</span>
+                                                            }
+                                                        </p>
+
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                <form method="POST" class="enrol" asp-controller="Enrolment" asp-action="Enrol">
+                                                    <input type="hidden" name="UserId" value="@usr.Id" />
+                                                    <input type="hidden" name="ClubScheduleId" value="@lnk.Id" />
+                                                    <button type="submit" class="btn btn-danger">Cancel Reservation</button>
+                                                </form>
+
+                                          
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+
+

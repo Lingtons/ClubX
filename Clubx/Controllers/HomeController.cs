@@ -1,6 +1,7 @@
 ﻿using Clubx.Models;
 using DataAccess.IServices;
 using DataAccess.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
