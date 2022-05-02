@@ -45,11 +45,36 @@ namespace Clubx.Controllers
             
             return View(await _lnkClubScheduleUserService.GetAll()
                 .Include(e => e.ClubSchedule)
+                .ThenInclude(e => e.Location)
+                .Include(e => e.ClubSchedule)
                 .ThenInclude(e => e.Club)
                 .Where(e => e.UserId == userId)
                 .AsNoTracking()
                 .OrderByDescending(e => e.CreatedAt)
                 .ToListAsync());
+        }
+
+        [Authorize()]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CancelReservation([Bind("LnkId,ScheduleId")] int lnkId,  int ScheduleId)
+        {
+            try
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+               LnkClubScheduleUser lnk = _lnkClubScheduleUserService.GetAll().FirstOrDefault(e => e.Id == lnkId && e.UserId == userId && e.ClubScheduleId == ScheduleId);
+                if (lnk != null)
+                {
+                    _lnkClubScheduleUserService.Delete(lnk);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+
+            }
+
+            return Redirect(HttpContext.Request.Headers["Referer"]);
         }
     }
 }

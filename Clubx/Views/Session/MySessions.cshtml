@@ -86,6 +86,11 @@
                                                                 <span class=" badge badge-pill badge-info">Virtual</span>
                                                             }
                                                         </p>
+                                                        <p class="card-text">Venue: @lnk.ClubSchedule.Location.Address</p>
+                                                        @if (lnk.ClubSchedule.Virtual)
+                                                        {
+                                                           <p>Virtual Link: <a href="@lnk.ClubSchedule.VirtualLink">@lnk.ClubSchedule.VirtualLink</a> </p>
+                                                        }
 
                                                     </div>
                                                 </div>
@@ -94,9 +99,9 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                <form method="POST" class="enrol" asp-controller="Enrolment" asp-action="Enrol">
-                                                    <input type="hidden" name="UserId" value="@usr.Id" />
-                                                    <input type="hidden" name="ClubScheduleId" value="@lnk.Id" />
+                                                <form method="POST" class="enrol" asp-controller="Session" asp-action="CancelReservation">
+                                                    <input type="hidden" name="ScheduleId" value="@lnk.ClubScheduleId" />
+                                                    <input type="hidden" name="LnkId" value="@lnk.Id" />
                                                     <button type="submit" class="btn btn-danger">Cancel Reservation</button>
                                                 </form>
 
