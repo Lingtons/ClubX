@@ -14,6 +14,23 @@
     }
 }
 
+@section Styles{
+    <link rel="stylesheet" href="~/css/landing.css" /> 
+}
+
+<header class="masthead">
+    <div class="container-fluid position-relative">
+        <div class="row justify-content-center">
+            <div class="col-xl-6">
+                <div class="text-center text-white">
+                    <!-- Page heading-->
+                    <h1 class="mb-5">Welcome to Iguana!</h1>
+                    <h4>Find and enrol to club and their sessions</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
 <div class="">
     <h1 class="display-4">Sessions</h1>
 </div>
@@ -56,7 +73,7 @@
                                     int available = meeting.Capacity - meeting.LnkClubScheduleUsers.Count;
                                     if (available < 1)
                                     {
-                                        <span>Sold Out</span>
+                                        <span>Fully booked</span>
                                     }
                                     else
                                     {
@@ -105,11 +122,11 @@
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                             @if (User.Identity.IsAuthenticated && Utility.IsMember(meeting.Club.Id, usr.Id))
                                             {
-                                            <form method="POST" class="enrol" asp-controller="Enrolment" asp-action="Enrol">
-                                                <input type="hidden" name="UserId" value="@usr.Id" />
-                                                <input type="hidden" name="ClubScheduleId" value="@meeting.Id" />
-                                                <button type="submit" class="btn btn-primary">Enrol now</button>
-                                            </form>
+                                                <form method="POST" class="enrol" asp-controller="Enrolment" asp-action="Enrol">
+                                                    <input type="hidden" name="UserId" value="@usr.Id" />
+                                                    <input type="hidden" name="ClubScheduleId" value="@meeting.Id" />
+                                                    <button type="submit" class="btn btn-primary">Enrol now</button>
+                                                </form>
 
                                             }
                                         </div>
